@@ -67,6 +67,15 @@ require("lualine").setup({
 })
 ```
 
+## Other apps
+
+Themes for other apps live in [`extras/`](extras):
+
+- [Ghostty](https://ghostty.org): copy `extras/ghostty/beryl` to
+  `~/.config/ghostty/themes/beryl`, then set `theme = beryl` in your config
+- [Claude Code](https://claude.com/claude-code): copy `extras/claude-code/beryl.json`
+  to `~/.claude/themes/beryl.json`, then pick Beryl in `/theme`
+
 ## Palette
 
 | Role | Color |
@@ -105,8 +114,19 @@ colors/beryl.lua              entry point for :colorscheme
 lua/beryl/palette.lua         every color value lives here
 lua/beryl/groups/             highlight definitions, one file per area
 lua/beryl/terminal.lua        terminal colors
+scripts/build.lua             generates extras/ from the palette
+extras/                       themes for other apps (generated, do not edit)
 lua/beryl/lualine.lua         lualine theme
 lua/lualine/themes/beryl.lua  lets lualine find the theme by name
+```
+
+## Development
+
+`lua/beryl/palette.lua` is the single source for every color. After changing
+it, regenerate the themes in `extras/`:
+
+```sh
+nvim -l scripts/build.lua
 ```
 
 ## License

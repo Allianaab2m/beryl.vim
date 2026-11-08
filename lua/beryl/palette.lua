@@ -40,6 +40,10 @@ M.diff_add = "#15493F" -- bg を emerald_light へ 20%
 M.diff_delete = "#36362A" -- bg を error へ 20%
 M.diff_change = "#2C3D2F" -- bg を type へ 12%
 M.diff_text = "#495138" -- bg を type へ 25%
+M.diff_add_dim = "#133A32" -- bg を emerald_light へ 10%．薄く出す diff
+M.diff_delete_dim = "#233128" -- bg を error へ 10%
+M.diff_add_word = "#196757" -- bg を emerald_light へ 40%．行内で変わった語
+M.diff_delete_word = "#5B412E" -- bg を error へ 40%
 
 -- 派生：ターミナルの bright 色（元の色を白へ 25%）
 M.bright = {
@@ -49,6 +53,30 @@ M.bright = {
   blue = "#9FCDEE",
   magenta = "#D6BCF8",
   cyan = "#BEEAE0",
+  indigo = "#BAC4F3", -- bright.blue と bright.magenta を 50% ずつ
+}
+
+-- 派生：Claude Code の虹色に要る藍（blue と number を 50% ずつ）
+M.indigo = "#A4B1EE"
+
+-- ターミナルの16色（0〜15）．Neovim の terminal_color_N と extras/ の生成物が共有する
+M.terminal = {
+  M.nontext, -- 0 black（bg と区別できる程度に明るく）
+  M.error_bright, -- 1 red
+  M.emerald_light, -- 2 green
+  M.type, -- 3 yellow
+  M.blue, -- 4 blue
+  M.number, -- 5 magenta
+  M.mint, -- 6 cyan
+  M.fg_dim, -- 7 white
+  M.comment, -- 8 bright black
+  M.bright.red, -- 9
+  M.bright.green, -- 10
+  M.bright.yellow, -- 11
+  M.bright.blue, -- 12
+  M.bright.magenta, -- 13
+  M.bright.cyan, -- 14
+  M.fg, -- 15 bright white
 }
 
 M.none = "NONE"
