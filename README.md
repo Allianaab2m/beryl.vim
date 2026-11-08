@@ -1,25 +1,114 @@
 # beryl.vim
 
-Emela のロゴとスライドの配色から作った、エメラルドの深い緑を基調にしたダークテーマ．
+A dark Neovim colorscheme in deep emerald, written in Lua.
+
+The palette comes from the logo and slides of [Emela](https://github.com/emela-lang/emela),
+a programming language. Emerald is a variety of beryl, hence the name.
+
+![beryl in Neovim, showing TypeScript and Rust side by side](assets/screenshot.png)
+
+## Features
+
+- Standard highlight groups, Treesitter captures and LSP semantic tokens
+- Diagnostics in four distinct hues: error, warning, info and hint
+- Plugin support: [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim),
+  [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) and a
+  [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) theme
+- The 16 terminal colors (`terminal_color_0` to `terminal_color_15`)
+- Optional transparent background
+- All body text meets WCAG AA (4.5:1) against the background
+
+## Requirements
+
+- Neovim 0.10 or later
+- `termguicolors` (beryl turns it on when loaded)
+
+## Installation
+
+With [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
   "Allianaab2m/beryl.vim",
-  opts = {
-    transparent = false,     -- 背景を透過する
-    italic_comments = true,
-    terminal_colors = true,  -- terminal_color_0〜15 を設定する
-    on_highlights = function(hl, p) end, -- 定義の上書き
-  },
+  lazy = false,
+  priority = 1000,
+  config = function()
+    require("beryl").setup({})
+    vim.cmd.colorscheme("beryl")
+  end,
 }
 ```
 
-```vim
-colorscheme beryl
+Or just run `:colorscheme beryl` after installing it with any plugin manager.
+
+## Configuration
+
+These are the defaults. Call `setup` before `:colorscheme beryl`.
+
+```lua
+require("beryl").setup({
+  -- Leave the background unset so the terminal background shows through
+  transparent = false,
+  italic_comments = true,
+  -- Set terminal_color_0 to terminal_color_15
+  terminal_colors = true,
+  -- Override or add highlight groups
+  on_highlights = function(highlights, palette)
+    -- highlights.CursorLine = { bg = palette.bg_dark }
+  end,
+})
 ```
 
-lualine は `theme = "beryl"`．
+### lualine
 
-- `lua/beryl/palette.lua` 色の値はここだけ
-- `lua/beryl/groups/` ハイライト定義（標準 / Treesitter / semantic tokens / Diagnostic / gitsigns / telescope）
-- `lua/beryl/lualine.lua` lualine テーマ（`lua/lualine/themes/beryl.lua` から転送）
+```lua
+require("lualine").setup({
+  options = { theme = "beryl" },
+})
+```
+
+## Palette
+
+| Role | Color |
+| --- | --- |
+| Background | `#112B26` |
+| Foreground | `#E4F4EF` |
+| Comment (italic) | `#7F9A93` |
+| Keyword, attribute | `#5FD9BC` |
+| Type, constructor | `#F2C46D` |
+| String | `#F4A77A` |
+| Number, built-in constant | `#C9A6F5` |
+| Function | `#A9E3D6` |
+| `self`, `this`, macro | `#24C0A1` |
+| Error | `#E07A50` |
+
+Contrast against the background:
+
+| Color | Ratio |
+| --- | --- |
+| Foreground | 13.23:1 |
+| Function | 10.48:1 |
+| Type | 9.23:1 |
+| Keyword | 8.69:1 |
+| String | 7.63:1 |
+| Number | 7.34:1 |
+| Error | 5.06:1 |
+| Comment | 4.97:1 |
+
+The full palette, including the derived background shades, is in
+[`lua/beryl/palette.lua`](lua/beryl/palette.lua).
+
+## Layout
+
+```
+colors/beryl.lua              entry point for :colorscheme
+lua/beryl/palette.lua         every color value lives here
+lua/beryl/groups/             highlight definitions, one file per area
+lua/beryl/terminal.lua        terminal colors
+lua/beryl/lualine.lua         lualine theme
+lua/lualine/themes/beryl.lua  lets lualine find the theme by name
+```
+
+## License
+
+[MIT](LICENSE)
