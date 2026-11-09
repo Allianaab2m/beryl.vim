@@ -11,7 +11,7 @@ return function(p, c)
     Float = { fg = p.number },
 
     Identifier = { fg = p.fg },
-    Function = { fg = p.mint },
+    Function = { fg = p.aquamarine },
 
     Statement = { fg = p.keyword },
     Conditional = { fg = p.keyword },
@@ -19,7 +19,7 @@ return function(p, c)
     Label = { fg = p.keyword },
     Operator = { fg = p.fg },
     Keyword = { fg = p.keyword },
-    Exception = { fg = p.keyword },
+    Exception = { fg = p.red_beryl }, -- 失敗の経路は赤系
 
     PreProc = { fg = p.keyword },
     Include = { fg = p.keyword },
@@ -35,7 +35,7 @@ return function(p, c)
     Special = { fg = p.mint },
     SpecialChar = { fg = p.keyword },
     Tag = { fg = p.keyword },
-    Delimiter = { fg = p.fg },
+    Delimiter = { fg = p.fg_dim },
     SpecialComment = { fg = p.comment, bold = true },
     Debug = { fg = p.error_bright },
 

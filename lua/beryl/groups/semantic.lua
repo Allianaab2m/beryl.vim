@@ -42,6 +42,10 @@ return function(p, c)
     ["@lsp.mod.deprecated"] = { strikethrough = true },
     ["@lsp.typemod.function.defaultLibrary"] = { link = "@function.builtin" },
     ["@lsp.typemod.variable.defaultLibrary"] = { link = "@variable.builtin" },
-    ["@lsp.typemod.variable.readonly"] = { link = "@constant" },
+    -- TS では const の変数がすべて readonly になるので、定数の色にしない
+    ["@lsp.typemod.variable.readonly"] = {},
+
+    -- Emela：Treesitter 側と同じく引数を本文色にする
+    ["@lsp.type.parameter.emela"] = { link = "@variable.parameter.emela" },
   }
 end

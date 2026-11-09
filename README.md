@@ -78,34 +78,40 @@ Themes for other apps live in [`extras/`](extras):
 
 ## Palette
 
-| Role | Color |
-| --- | --- |
-| Background | `#112B26` |
-| Foreground | `#E4F4EF` |
-| Comment (italic) | `#7F9A93` |
-| Keyword, attribute | `#5FD9BC` |
-| Type, constructor | `#F2C46D` |
-| String | `#F4A77A` |
-| Number, built-in constant | `#C9A6F5` |
-| Function | `#A9E3D6` |
-| `self`, `this`, macro | `#24C0A1` |
-| Error | `#E07A50` |
+![The beryl palette: syntax colors with their contrast against the background, background shades and the 16 terminal colors](assets/palette.svg)
 
-Contrast against the background:
+The colors beyond the original Emela palette come from other varieties of
+beryl: aquamarine for functions and red beryl for parameters and errors.
 
-| Color | Ratio |
-| --- | --- |
-| Foreground | 13.23:1 |
-| Function | 10.48:1 |
-| Type | 9.23:1 |
-| Keyword | 8.69:1 |
-| String | 7.63:1 |
-| Number | 7.34:1 |
-| Error | 5.06:1 |
-| Comment | 4.97:1 |
+| Role | Color | Contrast |
+| --- | --- | --- |
+| Foreground: variable, module | `#E4F4EF` | 13.23:1 |
+| Field, property | `#A9E3D6` | 10.48:1 |
+| Type, constructor | `#F2C46D` | 9.23:1 |
+| Keyword, attribute | `#5FD9BC` | 8.69:1 |
+| Bracket, delimiter | `#AFC2BD` | 8.07:1 |
+| String | `#F4A77A` | 7.63:1 |
+| Function, method | `#7FBCE8` | 7.34:1 |
+| Number, constant | `#C9A6F5` | 7.34:1 |
+| Doc comment | `#8DB3A8` | 6.55:1 |
+| Effect, `async`/`await`, macro | `#24C0A1` | 6.53:1 |
+| Parameter, `self`/`this`, error type, `throw`/`fail` | `#F28B9B` | 6.40:1 |
+| Error | `#E07A50` | 5.06:1 |
+| Comment (italic) | `#7F9A93` | 4.97:1 |
+
+Contrast is against the background `#112B26`.
+
+Two colors carry meaning across languages: the logo green marks where side
+effects enter (Emela effects, `async`/`await`), and red beryl marks where a
+function can fail (Emela error types and `fail`, `throw`/`try`/`catch`). In
+Emela, parameters stay in the foreground color so they do not clash with error
+types in a signature. Effect names and error types are colored through the
+`@type.effect` and `@type.error` captures; editors that do not know them fall
+back to `@type`.
 
 The full palette, including the derived background shades, is in
-[`lua/beryl/palette.lua`](lua/beryl/palette.lua).
+[`lua/beryl/palette.lua`](lua/beryl/palette.lua). `assets/palette.svg` is
+generated from it.
 
 ## Layout
 
@@ -114,7 +120,7 @@ colors/beryl.lua              entry point for :colorscheme
 lua/beryl/palette.lua         every color value lives here
 lua/beryl/groups/             highlight definitions, one file per area
 lua/beryl/terminal.lua        terminal colors
-scripts/build.lua             generates extras/ from the palette
+scripts/build.lua             generates extras/ and assets/palette.svg from the palette
 extras/                       themes for other apps (generated, do not edit)
 lua/beryl/lualine.lua         lualine theme
 lua/lualine/themes/beryl.lua  lets lualine find the theme by name
@@ -123,7 +129,7 @@ lua/lualine/themes/beryl.lua  lets lualine find the theme by name
 ## Development
 
 `lua/beryl/palette.lua` is the single source for every color. After changing
-it, regenerate the themes in `extras/`:
+it, regenerate the themes in `extras/` and the palette image:
 
 ```sh
 nvim -l scripts/build.lua

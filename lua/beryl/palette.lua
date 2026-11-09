@@ -17,6 +17,10 @@ M.mint = "#A9E3D6"
 M.gray = "#55635F"
 M.error = "#C9633A"
 
+-- 足した色．エメラルドと同じベリルの別の変種から取った
+M.aquamarine = "#7FBCE8" -- アクアマリン．関数
+M.red_beryl = "#F28B9B" -- レッドベリル．引数、self、失敗の経路（throw, fail, error 型）
+
 -- 派生：背景
 M.bg_dark = "#0D201C" -- bg を黒へ 25%．ステータスライン、非アクティブ面
 M.bg_hl = "#1E3732" -- bg を fg へ 6%．カーソル行、ポップアップ
@@ -27,7 +31,8 @@ M.nontext = "#2A433E" -- bg を fg へ 12%．インデントガイド、空白�
 -- 派生：前景
 M.fg_dim = "#AFC2BD" -- fg を bg へ 25%．句読点、非アクティブな文字
 M.error_bright = "#E07A50" -- error を明るく．文字として読ませる用（bg 上 5.06:1）
-M.blue = "#7FBCE8" -- パレットに青が無いので追加．ターミナルの blue と URL 用
+M.blue = M.aquamarine -- ターミナルの blue と URL 用
+M.comment_doc = "#8DB3A8" -- comment より一段明るい．ドキュメントコメント（bg 上 6.55:1）
 
 -- 派生：Diagnostic の背景（各色を bg へ 15〜20% 混ぜる）
 M.error_bg = "#36362A"
