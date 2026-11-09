@@ -1,0 +1,27 @@
+{
+  "name": "beryl",
+  "displayName": "Beryl",
+  "description": "A dark theme in deep emerald, from the palette of the Emela language",
+  "version": "0.1.0",
+  "publisher": "allianaab2m",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Allianaab2m/beryl.vim"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Beryl",
+        "uiTheme": "vs-dark",
+        "path": "./themes/beryl-color-theme.json"
+      }
+    ]
+  }
+}

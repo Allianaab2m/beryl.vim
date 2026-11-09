@@ -10,6 +10,8 @@ a programming language. Emerald is a variety of beryl, hence the name.
 ## Features
 
 - Standard highlight groups, Treesitter captures and LSP semantic tokens
+- Themes for Ghostty, Claude Code, bat, delta, VS Code and Zed, generated from
+  the same palette
 - Diagnostics in four distinct hues: error, warning, info and hint
 - Plugin support: [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim),
   [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) and a
@@ -75,6 +77,14 @@ Themes for other apps live in [`extras/`](extras):
   `~/.config/ghostty/themes/beryl`, then set `theme = beryl` in your config
 - [Claude Code](https://claude.com/claude-code): copy `extras/claude-code/beryl.json`
   to `~/.claude/themes/beryl.json`, then pick Beryl in `/theme`
+- [VS Code](https://code.visualstudio.com): `extras/vscode` is the extension
+  folder. Link or copy it to `~/.vscode/extensions/beryl`, reload, then pick
+  Beryl in Preferences: Color Theme
+- [Zed](https://zed.dev): copy `extras/zed/themes/beryl.json` to
+  `~/.config/zed/themes/`, or install `extras/zed` with
+  zed: install dev extension, then pick Beryl in theme selector: toggle.
+  Zed cannot override colors per language, so Emela parameters are red beryl
+  there
 - [bat](https://github.com/sharkdp/bat): copy `extras/bat/beryl.tmTheme` to
   `$(bat --config-dir)/themes/`, run `bat cache --build`, then set
   `--theme=beryl`

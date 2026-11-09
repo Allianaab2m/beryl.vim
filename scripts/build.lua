@@ -110,47 +110,52 @@ targets["extras/claude-code/beryl.json"] = function()
   return lines
 end
 
--- bat（delta もこのテーマを使う）．TextMate のスコープを Neovim と同じ役割の色に割り当てる
+-- TextMate のスコープを Neovim と同じ役割の色に割り当てる．bat と VS Code が共有する
+-- { 名前, スコープ, 前景, 字形 }．後の行が勝つのではなく、より詳しいスコープが勝つ
+local textmate_rules = {
+  { "Comment", "comment, punctuation.definition.comment", p.comment, "italic" },
+  { "Doc comment", "comment.block.documentation, comment.line.documentation", p.comment_doc },
+  { "String", "string, punctuation.definition.string", p.string },
+  { "Escape", "constant.character.escape, constant.other.placeholder", p.keyword },
+  { "Interpolation", "punctuation.section.embedded, punctuation.definition.template-expression, punctuation.section.interpolation", p.keyword },
+  { "Number, constant", "constant.numeric, constant.language, constant.other, support.constant", p.number },
+  { "Keyword", "keyword, storage, storage.type, storage.modifier, keyword.operator.word, keyword.operator.new", p.keyword },
+  { "Operator", "keyword.operator", p.fg },
+  { "Effect entry", "keyword.control.flow.await, storage.modifier.async, keyword.control.async", p.emerald_light },
+  { "Failure path", "keyword.control.exception, keyword.control.trycatch, keyword.control.flow.throw", p.red_beryl },
+  { "Function", "entity.name.function, support.function, meta.function-call.generic, variable.function", p.aquamarine },
+  { "Macro", "entity.name.function.macro, support.macro, support.function.macro", p.emerald_light },
+  {
+    "Type",
+    "entity.name.type, entity.name.class, entity.name.struct, entity.name.enum, entity.name.interface, entity.name.trait, entity.other.inherited-class, support.type, support.class, storage.type.primitive, storage.type.numeric",
+    p.type,
+  },
+  { "Parameter", "variable.parameter", p.red_beryl, "italic" },
+  { "self, this", "variable.language", p.red_beryl, "italic" },
+  { "Field", "variable.other.member, variable.other.property, variable.other.object.property, support.variable.property, meta.object-literal.key, entity.name.tag.yaml, support.type.property-name", p.mint },
+  { "Module", "entity.name.namespace, entity.name.module, support.module", p.fg, "italic" },
+  { "Attribute", "meta.annotation, meta.attribute, entity.name.function.decorator, punctuation.definition.annotation", p.keyword },
+  { "Punctuation", "punctuation, meta.brace", p.fg_dim },
+  { "Tag", "entity.name.tag", p.keyword },
+  { "Tag attribute", "entity.other.attribute-name", p.type, "italic" },
+  { "Invalid", "invalid", p.error_bright },
+  { "Heading", "markup.heading, entity.name.section", p.keyword, "bold" },
+  { "Bold", "markup.bold", nil, "bold" },
+  { "Italic", "markup.italic", nil, "italic" },
+  { "Raw", "markup.raw, markup.inline.raw", p.string },
+  { "Link", "markup.underline.link, string.other.link", p.blue, "underline" },
+  { "Quote", "markup.quote", p.comment, "italic" },
+  { "List marker", "punctuation.definition.list, markup.list.numbered.bullet", p.keyword },
+  { "Inserted", "markup.inserted", p.emerald_light },
+  { "Deleted", "markup.deleted", p.error_bright },
+  { "Changed", "markup.changed", p.type },
+  -- Emela：引数を本文色に戻す．シグネチャで error 型と並ぶため
+  { "Emela parameter", "variable.parameter.emela", p.fg, "italic" },
+}
+
+-- bat（delta もこのテーマを使う）
 targets["extras/bat/beryl.tmTheme"] = function()
-  -- { スコープ, 前景, 字形 }．後の行ほど優先されるのではなく、より詳しいスコープが勝つ
-  local rules = {
-    { "Comment", "comment, punctuation.definition.comment", p.comment, "italic" },
-    { "Doc comment", "comment.block.documentation, comment.line.documentation", p.comment_doc },
-    { "String", "string, punctuation.definition.string", p.string },
-    { "Escape", "constant.character.escape, constant.other.placeholder", p.keyword },
-    { "Interpolation", "punctuation.section.embedded, punctuation.definition.template-expression", p.keyword },
-    { "Number, constant", "constant.numeric, constant.language, constant.other, support.constant", p.number },
-    { "Keyword", "keyword, storage, storage.type, storage.modifier, keyword.operator.word, keyword.operator.new", p.keyword },
-    { "Operator", "keyword.operator", p.fg },
-    { "Effect entry", "keyword.control.flow.await, storage.modifier.async, keyword.control.async", p.emerald_light },
-    { "Failure path", "keyword.control.exception, keyword.control.trycatch, keyword.control.flow.throw", p.red_beryl },
-    { "Function", "entity.name.function, support.function, meta.function-call.generic, variable.function", p.aquamarine },
-    { "Macro", "entity.name.function.macro, support.macro, support.function.macro", p.emerald_light },
-    {
-      "Type",
-      "entity.name.type, entity.name.class, entity.name.struct, entity.name.enum, entity.name.interface, entity.name.trait, entity.other.inherited-class, support.type, support.class, storage.type.primitive, storage.type.numeric",
-      p.type,
-    },
-    { "Parameter", "variable.parameter", p.red_beryl, "italic" },
-    { "self, this", "variable.language", p.red_beryl, "italic" },
-    { "Field", "variable.other.member, variable.other.property, variable.other.object.property, support.variable.property, meta.object-literal.key, entity.name.tag.yaml, support.type.property-name", p.mint },
-    { "Module", "entity.name.namespace, entity.name.module, support.module", p.fg, "italic" },
-    { "Attribute", "meta.annotation, meta.attribute, entity.name.function.decorator, punctuation.definition.annotation", p.keyword },
-    { "Punctuation", "punctuation, meta.brace", p.fg_dim },
-    { "Tag", "entity.name.tag", p.keyword },
-    { "Tag attribute", "entity.other.attribute-name", p.type, "italic" },
-    { "Invalid", "invalid", p.error_bright },
-    { "Heading", "markup.heading, entity.name.section", p.keyword, "bold" },
-    { "Bold", "markup.bold", nil, "bold" },
-    { "Italic", "markup.italic", nil, "italic" },
-    { "Raw", "markup.raw, markup.inline.raw", p.string },
-    { "Link", "markup.underline.link, string.other.link", p.blue, "underline" },
-    { "Quote", "markup.quote", p.comment, "italic" },
-    { "List marker", "punctuation.definition.list, markup.list.numbered.bullet", p.keyword },
-    { "Inserted", "markup.inserted", p.emerald_light },
-    { "Deleted", "markup.deleted", p.error_bright },
-    { "Changed", "markup.changed", p.type },
-  }
+  local rules = textmate_rules
 
   local function dict(pairs_, indent)
     local lines = { indent .. "<dict>" }
@@ -242,6 +247,519 @@ targets["extras/delta/beryl.gitconfig"] = function()
     lines[#lines + 1] = ("\t%s = %s"):format(kv[1], kv[2])
   end
   return lines
+end
+
+-- 順序を保つ JSON．vim.json.encode はキーの順序を保たず、生成のたびに差分が出るので使わない．
+-- obj{ { key, value }, ... } がオブジェクト、ただの配列が配列になる
+local OBJ = {}
+local function obj(kvs)
+  return setmetatable(kvs, OBJ)
+end
+
+local function json(v, indent)
+  indent = indent or ""
+  local inner = indent .. "  "
+  if type(v) == "string" then
+    return vim.json.encode(v)
+  elseif type(v) ~= "table" then
+    return tostring(v)
+  end
+  local parts = {}
+  if getmetatable(v) == OBJ then
+    for _, kv in ipairs(v) do
+      parts[#parts + 1] = ("%s%s: %s"):format(inner, vim.json.encode(kv[1]), json(kv[2], inner))
+    end
+    return #parts == 0 and "{}" or "{\n" .. table.concat(parts, ",\n") .. "\n" .. indent .. "}"
+  end
+  for _, x in ipairs(v) do
+    parts[#parts + 1] = inner .. json(x, inner)
+  end
+  return #parts == 0 and "[]" or "[\n" .. table.concat(parts, ",\n") .. "\n" .. indent .. "]"
+end
+
+local function json_lines(v)
+  return vim.split(json(v), "\n")
+end
+
+-- ANSI の 16 色の名前（p.terminal の順）
+local ansi_names = { "black", "red", "green", "yellow", "blue", "magenta", "cyan", "white" }
+
+-- VS Code の拡張（extras/vscode をそのまま拡張のフォルダとして使える）
+targets["extras/vscode/package.json"] = function()
+  return json_lines(obj({
+    { "name", "beryl" },
+    { "displayName", "Beryl" },
+    { "description", "A dark theme in deep emerald, from the palette of the Emela language" },
+    { "version", "0.1.0" },
+    { "publisher", "allianaab2m" },
+    { "license", "MIT" },
+    { "repository", obj({ { "type", "git" }, { "url", "https://github.com/Allianaab2m/beryl.vim" } }) },
+    { "engines", obj({ { "vscode", "^1.80.0" } }) },
+    { "categories", { "Themes" } },
+    {
+      "contributes",
+      obj({
+        {
+          "themes",
+          {
+            obj({ { "label", "Beryl" }, { "uiTheme", "vs-dark" }, { "path", "./themes/beryl-color-theme.json" } }),
+          },
+        },
+      }),
+    },
+  }))
+end
+
+targets["extras/vscode/themes/beryl-color-theme.json"] = function()
+  local colors = {
+    -- 全体
+    { "foreground", p.fg },
+    { "descriptionForeground", p.fg_dim },
+    { "disabledForeground", p.comment },
+    { "errorForeground", p.error_bright },
+    { "focusBorder", p.emerald_dark },
+    { "selection.background", p.bg_visual },
+    { "widget.shadow", "#00000066" },
+    { "textLink.foreground", p.blue },
+    { "textLink.activeForeground", p.bright.blue },
+    { "textCodeBlock.background", p.bg_hl },
+    { "textBlockQuote.background", p.bg_hl },
+    { "textBlockQuote.border", p.emerald_dark },
+    { "textPreformat.foreground", p.string },
+    { "icon.foreground", p.fg_dim },
+
+    -- ボタンと入力欄
+    { "button.background", p.emerald_deep },
+    { "button.foreground", p.fg },
+    { "button.hoverBackground", p.emerald_dark },
+    { "button.secondaryBackground", p.bg_hl },
+    { "button.secondaryForeground", p.fg },
+    { "button.secondaryHoverBackground", p.nontext },
+    { "badge.background", p.emerald_dark },
+    { "badge.foreground", p.fg },
+    { "input.background", p.bg_hl },
+    { "input.foreground", p.fg },
+    { "input.border", p.nontext },
+    { "input.placeholderForeground", p.comment },
+    { "inputOption.activeBackground", p.emerald_deep },
+    { "inputOption.activeBorder", p.emerald_dark },
+    { "inputValidation.errorBackground", p.error_bg },
+    { "inputValidation.errorBorder", p.error },
+    { "inputValidation.warningBackground", p.warn_bg },
+    { "inputValidation.warningBorder", p.type },
+    { "inputValidation.infoBackground", p.info_bg },
+    { "inputValidation.infoBorder", p.keyword },
+    { "dropdown.background", p.bg_hl },
+    { "dropdown.border", p.nontext },
+    { "dropdown.foreground", p.fg },
+    { "checkbox.background", p.bg_hl },
+    { "checkbox.border", p.nontext },
+    { "progressBar.background", p.emerald_light },
+    { "scrollbarSlider.background", p.nontext .. "99" },
+    { "scrollbarSlider.hoverBackground", p.nontext },
+    { "scrollbarSlider.activeBackground", p.emerald_dark },
+
+    -- リスト・ツリー
+    { "list.activeSelectionBackground", p.emerald_deep },
+    { "list.activeSelectionForeground", p.fg },
+    { "list.inactiveSelectionBackground", p.bg_hl },
+    { "list.hoverBackground", p.bg_hl },
+    { "list.focusOutline", p.emerald_dark },
+    { "list.highlightForeground", p.keyword },
+    { "list.errorForeground", p.error_bright },
+    { "list.warningForeground", p.type },
+    { "tree.indentGuidesStroke", p.nontext },
+
+    -- 枠の部品
+    { "activityBar.background", p.bg_dark },
+    { "activityBar.foreground", p.fg },
+    { "activityBar.inactiveForeground", p.comment },
+    { "activityBar.border", p.bg_dark },
+    { "activityBar.activeBorder", p.emerald_light },
+    { "activityBarBadge.background", p.emerald_light },
+    { "activityBarBadge.foreground", p.bg },
+    { "sideBar.background", p.bg_dark },
+    { "sideBar.foreground", p.fg_dim },
+    { "sideBar.border", p.bg_dark },
+    { "sideBarTitle.foreground", p.fg_dim },
+    { "sideBarSectionHeader.background", p.bg_dark },
+    { "sideBarSectionHeader.foreground", p.fg_dim },
+    { "titleBar.activeBackground", p.bg_dark },
+    { "titleBar.activeForeground", p.fg_dim },
+    { "titleBar.inactiveBackground", p.bg_dark },
+    { "titleBar.inactiveForeground", p.comment },
+    { "titleBar.border", p.bg_dark },
+    { "statusBar.background", p.bg_dark },
+    { "statusBar.foreground", p.fg_dim },
+    { "statusBar.border", p.bg_dark },
+    { "statusBar.noFolderBackground", p.bg_dark },
+    { "statusBar.debuggingBackground", p.type },
+    { "statusBar.debuggingForeground", p.bg },
+    { "statusBarItem.remoteBackground", p.emerald_light },
+    { "statusBarItem.remoteForeground", p.bg },
+    { "statusBarItem.hoverBackground", p.bg_hl },
+    { "panel.background", p.bg_dark },
+    { "panel.border", p.emerald_deep },
+    { "panelTitle.activeBorder", p.emerald_light },
+    { "panelTitle.activeForeground", p.fg },
+    { "panelTitle.inactiveForeground", p.comment },
+    { "editorGroup.border", p.emerald_deep },
+    { "editorGroupHeader.tabsBackground", p.bg_dark },
+    { "editorGroupHeader.tabsBorder", p.bg_dark },
+    { "tab.activeBackground", p.bg },
+    { "tab.activeForeground", p.fg },
+    { "tab.activeBorderTop", p.emerald_light },
+    { "tab.inactiveBackground", p.bg_dark },
+    { "tab.inactiveForeground", p.comment },
+    { "tab.border", p.bg_dark },
+    { "tab.hoverBackground", p.bg_hl },
+    { "breadcrumb.foreground", p.comment },
+    { "breadcrumb.focusForeground", p.fg },
+    { "breadcrumb.activeSelectionForeground", p.keyword },
+    { "breadcrumb.background", p.bg },
+    { "quickInput.background", p.bg_hl },
+    { "quickInput.foreground", p.fg },
+    { "quickInputList.focusBackground", p.emerald_deep },
+    { "pickerGroup.foreground", p.keyword },
+    { "pickerGroup.border", p.nontext },
+    { "notifications.background", p.bg_hl },
+    { "notifications.foreground", p.fg },
+    { "notifications.border", p.nontext },
+    { "menu.background", p.bg_hl },
+    { "menu.foreground", p.fg },
+    { "menu.selectionBackground", p.emerald_deep },
+    { "menu.separatorBackground", p.nontext },
+
+    -- エディタ
+    { "editor.background", p.bg },
+    { "editor.foreground", p.fg },
+    { "editorCursor.foreground", p.fg },
+    { "editor.lineHighlightBackground", p.bg_hl },
+    { "editor.lineHighlightBorder", p.bg_hl },
+    { "editorLineNumber.foreground", p.gray },
+    { "editorLineNumber.activeForeground", p.emerald_light },
+    { "editor.selectionBackground", p.bg_visual },
+    { "editor.inactiveSelectionBackground", p.bg_visual .. "99" },
+    { "editor.selectionHighlightBackground", p.nontext },
+    { "editor.wordHighlightBackground", p.nontext },
+    { "editor.wordHighlightStrongBackground", p.bg_visual },
+    { "editor.findMatchBackground", p.type .. "66" },
+    { "editor.findMatchHighlightBackground", p.bg_search },
+    { "editor.rangeHighlightBackground", p.bg_hl },
+    { "editorBracketMatch.background", p.emerald_dark .. "80" },
+    { "editorBracketMatch.border", p.emerald_dark },
+    { "editorWhitespace.foreground", p.nontext },
+    { "editorIndentGuide.background1", p.nontext },
+    { "editorIndentGuide.activeBackground1", p.comment },
+    { "editorRuler.foreground", p.nontext },
+    { "editorCodeLens.foreground", p.comment },
+    { "editorLink.activeForeground", p.blue },
+    { "editorInlayHint.foreground", p.comment },
+    { "editorInlayHint.background", p.bg_hl },
+    { "editorGhostText.foreground", p.comment },
+    { "editorError.foreground", p.error_bright },
+    { "editorWarning.foreground", p.type },
+    { "editorInfo.foreground", p.keyword },
+    { "editorHint.foreground", p.number },
+    { "editorUnnecessaryCode.opacity", "#000000a0" },
+    { "editorGutter.background", p.bg },
+    { "editorGutter.addedBackground", p.emerald_light },
+    { "editorGutter.modifiedBackground", p.type },
+    { "editorGutter.deletedBackground", p.error_bright },
+    { "editorOverviewRuler.border", p.bg },
+    { "editorOverviewRuler.errorForeground", p.error_bright },
+    { "editorOverviewRuler.warningForeground", p.type },
+    { "editorOverviewRuler.infoForeground", p.keyword },
+    { "editorWidget.background", p.bg_hl },
+    { "editorWidget.foreground", p.fg },
+    { "editorWidget.border", p.emerald_dark },
+    { "editorSuggestWidget.background", p.bg_hl },
+    { "editorSuggestWidget.border", p.emerald_dark },
+    { "editorSuggestWidget.foreground", p.fg },
+    { "editorSuggestWidget.selectedBackground", p.emerald_deep },
+    { "editorSuggestWidget.highlightForeground", p.keyword },
+    { "editorHoverWidget.background", p.bg_hl },
+    { "editorHoverWidget.border", p.emerald_dark },
+    { "peekView.border", p.emerald_dark },
+    { "peekViewEditor.background", p.bg_dark },
+    { "peekViewResult.background", p.bg_hl },
+    { "peekViewTitle.background", p.bg_hl },
+    { "peekViewEditor.matchHighlightBackground", p.bg_search },
+    { "peekViewResult.matchHighlightBackground", p.bg_search },
+
+    -- 差分と git
+    { "diffEditor.insertedLineBackground", p.diff_add },
+    { "diffEditor.removedLineBackground", p.diff_delete },
+    { "diffEditor.insertedTextBackground", p.diff_add_word },
+    { "diffEditor.removedTextBackground", p.diff_delete_word },
+    { "gitDecoration.addedResourceForeground", p.emerald_light },
+    { "gitDecoration.modifiedResourceForeground", p.type },
+    { "gitDecoration.deletedResourceForeground", p.error_bright },
+    { "gitDecoration.untrackedResourceForeground", p.keyword },
+    { "gitDecoration.ignoredResourceForeground", p.comment },
+    { "gitDecoration.conflictingResourceForeground", p.number },
+
+    -- ターミナル
+    { "terminal.background", p.bg },
+    { "terminal.foreground", p.fg },
+    { "terminalCursor.foreground", p.fg },
+    { "terminal.selectionBackground", p.bg_visual },
+  }
+  for i, c in ipairs(p.terminal) do
+    local name = ansi_names[(i - 1) % 8 + 1]
+    local key = i <= 8 and name or "bright" .. name:sub(1, 1):upper() .. name:sub(2)
+    colors[#colors + 1] = { "terminal.ansi" .. key:sub(1, 1):upper() .. key:sub(2), c }
+  end
+
+  local token_colors = {}
+  for _, r in ipairs(textmate_rules) do
+    local settings = {}
+    if r[3] then
+      settings[#settings + 1] = { "foreground", r[3] }
+    end
+    if r[4] then
+      settings[#settings + 1] = { "fontStyle", r[4] }
+    end
+    local scopes = vim.split(r[2], ",%s*")
+    token_colors[#token_colors + 1] = obj({ { "name", r[1] }, { "scope", scopes }, { "settings", obj(settings) } })
+  end
+
+  local function style(fg, extra)
+    local t = { { "foreground", fg } }
+    for _, kv in ipairs(extra or {}) do
+      t[#t + 1] = kv
+    end
+    return obj(t)
+  end
+  -- LSP の semantic tokens．Neovim の groups/semantic.lua と同じ対応にする
+  local semantic = {
+    { "namespace", style(p.fg, { { "italic", true } }) },
+    { "type", style(p.type) },
+    { "class", style(p.type) },
+    { "enum", style(p.type) },
+    { "interface", style(p.type) },
+    { "struct", style(p.type) },
+    { "typeParameter", style(p.type) },
+    { "enumMember", style(p.type) },
+    { "function", style(p.aquamarine) },
+    { "method", style(p.aquamarine) },
+    { "macro", style(p.emerald_light) },
+    { "parameter", style(p.red_beryl, { { "italic", true } }) },
+    { "property", style(p.mint) },
+    { "variable", style(p.fg) },
+    { "decorator", style(p.keyword) },
+    { "keyword", style(p.keyword) },
+    { "number", style(p.number) },
+    { "string", style(p.string) },
+    { "regexp", style(p.mint) },
+    { "operator", style(p.fg) },
+    { "selfKeyword", style(p.red_beryl, { { "italic", true } }) },
+    { "lifetime", style(p.keyword) },
+    { "builtinType", style(p.type) },
+    { "*.deprecated", obj({ { "strikethrough", true } }) },
+    -- Emela：引数を本文色に戻す
+    { "parameter:emela", style(p.fg, { { "italic", true } }) },
+  }
+
+  return json_lines(obj({
+    { "$schema", "vscode://schemas/color-theme" },
+    { "name", "Beryl" },
+    { "type", "dark" },
+    { "semanticHighlighting", true },
+    { "colors", obj(colors) },
+    { "tokenColors", token_colors },
+    { "semanticTokenColors", obj(semantic) },
+  }))
+end
+
+-- Zed の拡張（extras/zed をそのまま拡張のフォルダとして使える）
+targets["extras/zed/extension.toml"] = function()
+  return {
+    "# " .. header,
+    'id = "beryl"',
+    'name = "Beryl"',
+    'version = "0.1.0"',
+    "schema_version = 1",
+    'authors = ["Alliana"]',
+    'description = "A dark theme in deep emerald, from the palette of the Emela language"',
+    'repository = "https://github.com/Allianaab2m/beryl.vim"',
+  }
+end
+
+targets["extras/zed/themes/beryl.json"] = function()
+  local style = {
+    { "background", p.bg_dark },
+    { "border", p.emerald_deep },
+    { "border.variant", p.bg_hl },
+    { "border.focused", p.emerald_dark },
+    { "border.selected", p.emerald_dark },
+    { "border.transparent", "#00000000" },
+    { "border.disabled", p.nontext },
+    { "elevated_surface.background", p.bg_hl },
+    { "surface.background", p.bg_dark },
+    { "element.background", p.bg_hl },
+    { "element.hover", p.nontext },
+    { "element.active", p.emerald_deep },
+    { "element.selected", p.emerald_deep },
+    { "element.disabled", p.bg_hl },
+    { "drop_target.background", p.emerald_deep .. "80" },
+    { "ghost_element.background", "#00000000" },
+    { "ghost_element.hover", p.bg_hl },
+    { "ghost_element.active", p.nontext },
+    { "ghost_element.selected", p.emerald_deep },
+    { "ghost_element.disabled", "#00000000" },
+    { "text", p.fg },
+    { "text.muted", p.fg_dim },
+    { "text.placeholder", p.comment },
+    { "text.disabled", p.gray },
+    { "text.accent", p.keyword },
+    { "icon", p.fg_dim },
+    { "icon.muted", p.comment },
+    { "icon.disabled", p.gray },
+    { "icon.placeholder", p.comment },
+    { "icon.accent", p.keyword },
+    { "status_bar.background", p.bg_dark },
+    { "title_bar.background", p.bg_dark },
+    { "title_bar.inactive_background", p.bg_dark },
+    { "toolbar.background", p.bg },
+    { "tab_bar.background", p.bg_dark },
+    { "tab.inactive_background", p.bg_dark },
+    { "tab.active_background", p.bg },
+    { "search.match_background", p.bg_search },
+    { "panel.background", p.bg_dark },
+    { "panel.focused_border", p.emerald_dark },
+    { "pane.focused_border", p.emerald_dark },
+    { "scrollbar.thumb.background", p.nontext .. "99" },
+    { "scrollbar.thumb.hover_background", p.nontext },
+    { "scrollbar.thumb.border", "#00000000" },
+    { "scrollbar.track.background", "#00000000" },
+    { "scrollbar.track.border", "#00000000" },
+    { "editor.foreground", p.fg },
+    { "editor.background", p.bg },
+    { "editor.gutter.background", p.bg },
+    { "editor.subheader.background", p.bg_hl },
+    { "editor.active_line.background", p.bg_hl },
+    { "editor.highlighted_line.background", p.bg_hl },
+    { "editor.line_number", p.gray },
+    { "editor.active_line_number", p.emerald_light },
+    { "editor.invisible", p.nontext },
+    { "editor.wrap_guide", p.nontext },
+    { "editor.active_wrap_guide", p.comment },
+    { "editor.indent_guide", p.nontext },
+    { "editor.indent_guide_active", p.comment },
+    { "editor.document_highlight.read_background", p.nontext },
+    { "editor.document_highlight.write_background", p.bg_visual },
+    { "editor.document_highlight.bracket_background", p.emerald_dark .. "80" },
+    { "link_text.hover", p.blue },
+    { "terminal.background", p.bg },
+    { "terminal.foreground", p.fg },
+    { "terminal.bright_foreground", p.fg },
+    { "terminal.dim_foreground", p.fg_dim },
+  }
+  for i, c in ipairs(p.terminal) do
+    local name = ansi_names[(i - 1) % 8 + 1]
+    style[#style + 1] = { "terminal.ansi." .. (i <= 8 and name or "bright_" .. name), c }
+  end
+  -- 状態の色．Neovim の Diagnostic と git の色に合わせる
+  local states = {
+    { "error", p.error_bright, p.error_bg },
+    { "warning", p.type, p.warn_bg },
+    { "info", p.keyword, p.info_bg },
+    { "hint", p.number, p.hint_bg },
+    { "success", p.emerald_light, p.diff_add },
+    { "created", p.emerald_light, p.diff_add },
+    { "modified", p.type, p.diff_change },
+    { "deleted", p.error_bright, p.diff_delete },
+    { "conflict", p.number, p.hint_bg },
+    { "renamed", p.blue, p.bg_hl },
+    { "ignored", p.comment, p.bg_hl },
+    { "hidden", p.comment, p.bg_hl },
+    { "unreachable", p.comment, p.bg_hl },
+    { "predictive", p.comment, p.bg_hl },
+  }
+  for _, s in ipairs(states) do
+    style[#style + 1] = { s[1], s[2] }
+    style[#style + 1] = { s[1] .. ".background", s[3] }
+    style[#style + 1] = { s[1] .. ".border", s[2] }
+  end
+  style[#style + 1] = {
+    "players",
+    { obj({ { "cursor", p.fg }, { "background", p.emerald_light }, { "selection", p.bg_visual } }) },
+  }
+
+  -- Zed はキャプチャ名の前方一致で色を探す（function.method.call は function に当たる）．
+  -- Neovim のように言語ごとに上書きできないので、Emela の引数もレッドベリルになる
+  local function s(color, font_style, font_weight)
+    local t = { { "color", color } }
+    if font_style then
+      t[#t + 1] = { "font_style", font_style }
+    end
+    if font_weight then
+      t[#t + 1] = { "font_weight", font_weight }
+    end
+    return obj(t)
+  end
+  local syntax = {
+    { "attribute", s(p.keyword) },
+    { "boolean", s(p.number) },
+    { "comment", s(p.comment, "italic") },
+    { "comment.doc", s(p.comment_doc) },
+    { "comment.documentation", s(p.comment_doc) },
+    { "constant", s(p.number) },
+    { "constructor", s(p.type) },
+    { "embedded", s(p.fg) },
+    { "emphasis", s(p.fg, "italic") },
+    { "emphasis.strong", s(p.fg, nil, 700) },
+    { "enum", s(p.type) },
+    { "function", s(p.aquamarine) },
+    { "function.macro", s(p.emerald_light) },
+    { "hint", s(p.comment) },
+    { "keyword", s(p.keyword) },
+    { "keyword.coroutine", s(p.emerald_light) },
+    { "keyword.exception", s(p.red_beryl) },
+    { "label", s(p.emerald_light, "italic") },
+    { "link_text", s(p.keyword) },
+    { "link_uri", s(p.blue) },
+    { "module", s(p.fg, "italic") },
+    { "namespace", s(p.fg, "italic") },
+    { "number", s(p.number) },
+    { "operator", s(p.fg) },
+    { "predictive", s(p.comment, "italic") },
+    { "preproc", s(p.keyword) },
+    { "primary", s(p.fg) },
+    { "property", s(p.mint) },
+    { "punctuation", s(p.fg_dim) },
+    { "punctuation.list_marker", s(p.keyword) },
+    { "punctuation.special", s(p.keyword) },
+    { "string", s(p.string) },
+    { "string.escape", s(p.keyword) },
+    { "string.regex", s(p.mint) },
+    { "string.special", s(p.keyword) },
+    { "string.special.symbol", s(p.number) },
+    { "tag", s(p.keyword) },
+    { "text.literal", s(p.string) },
+    { "title", s(p.keyword, nil, 700) },
+    { "type", s(p.type) },
+    { "type.effect", s(p.emerald_light) },
+    { "type.error", s(p.red_beryl) },
+    { "variable", s(p.fg) },
+    { "variable.builtin", s(p.red_beryl, "italic") },
+    { "variable.member", s(p.mint) },
+    { "variable.parameter", s(p.red_beryl, "italic") },
+    { "variable.special", s(p.red_beryl, "italic") },
+    { "variant", s(p.type) },
+  }
+  style[#style + 1] = { "syntax", obj(syntax) }
+
+  return json_lines(obj({
+    { "$schema", "https://zed.dev/schema/themes/v0.2.0.json" },
+    { "name", "Beryl" },
+    { "author", "Alliana" },
+    {
+      "themes",
+      { obj({ { "name", "Beryl" }, { "appearance", "dark" }, { "style", obj(style) } }) },
+    },
+  }))
 end
 
 -- README に載せるパレットの見本（assets/palette.svg）
