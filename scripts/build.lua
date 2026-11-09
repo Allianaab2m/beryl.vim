@@ -110,6 +110,106 @@ targets["extras/claude-code/beryl.json"] = function()
   return lines
 end
 
+-- README に載せるパレットの見本（assets/palette.svg）
+-- 背景とのコントラスト比はここで計算する（WCAG 2.x の相対輝度）
+local function luminance(hex)
+  local function channel(i)
+    local v = tonumber(hex:sub(i, i + 1), 16) / 255
+    return v <= 0.04045 and v / 12.92 or ((v + 0.055) / 1.055) ^ 2.4
+  end
+  return 0.2126 * channel(2) + 0.7152 * channel(4) + 0.0722 * channel(6)
+end
+
+local function contrast(a, b)
+  local x, y = luminance(a), luminance(b)
+  if x < y then
+    x, y = y, x
+  end
+  return (x + 0.05) / (y + 0.05)
+end
+
+targets["assets/palette.svg"] = function()
+  local syntax = {
+    { "keyword", p.keyword, "Keyword, attribute" },
+    { "emerald_light", p.emerald_light, "Effect, async, macro" },
+    { "aquamarine", p.aquamarine, "Function, method" },
+    { "red_beryl", p.red_beryl, "Parameter, self, error" },
+    { "type", p.type, "Type, constructor" },
+    { "string", p.string, "String" },
+    { "number", p.number, "Number, constant" },
+    { "mint", p.mint, "Field, property" },
+    { "fg", p.fg, "Variable, module" },
+    { "fg_dim", p.fg_dim, "Bracket, delimiter" },
+    { "comment_doc", p.comment_doc, "Doc comment" },
+    { "comment", p.comment, "Comment" },
+  }
+  local base = {
+    { "bg_dark", p.bg_dark },
+    { "bg", p.bg },
+    { "bg_hl", p.bg_hl },
+    { "nontext", p.nontext },
+    { "bg_visual", p.bg_visual },
+    { "bg_search", p.bg_search },
+  }
+
+  local W, cols, card_w, card_h, gap, pad = 960, 3, 288, 72, 12, 30
+  local font = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+  local out = {}
+  local function add(s, ...)
+    out[#out + 1] = s:format(...)
+  end
+
+  local syntax_rows = math.ceil(#syntax / cols)
+  local y_base = 92 + syntax_rows * (card_h + gap) + 10
+  local y_term = y_base + 40 + 64 + 34
+  local H = y_term + 40 + 2 * 44 + pad
+
+  add('<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" font-family="%s">', W, H, W, H, font)
+  add("<!-- %s -->", header)
+  add('<rect width="%d" height="%d" rx="16" fill="%s"/>', W, H, p.bg_dark)
+  add('<text x="%d" y="54" fill="%s" font-size="26" font-weight="600">beryl</text>', pad, p.fg)
+  add('<text x="%d" y="54" fill="%s" font-size="14" text-anchor="end">contrast is against bg %s</text>', W - pad, p.comment, p.bg)
+
+  local function label(x, y, text)
+    add('<text x="%d" y="%d" fill="%s" font-size="13" letter-spacing="1.5">%s</text>', x, y, p.comment, text)
+  end
+
+  label(pad, 84, "SYNTAX")
+  for i, s in ipairs(syntax) do
+    local col, row = (i - 1) % cols, math.floor((i - 1) / cols)
+    local x, y = pad + col * (card_w + gap), 96 + row * (card_h + gap)
+    add('<rect x="%d" y="%d" width="%d" height="%d" rx="10" fill="%s"/>', x, y, card_w, card_h, p.bg)
+    add('<rect x="%d" y="%d" width="40" height="40" rx="8" fill="%s"/>', x + 16, y + 16, s[2])
+    add('<text x="%d" y="%d" fill="%s" font-size="15" font-weight="600">%s</text>', x + 70, y + 30, s[2], s[1])
+    add('<text x="%d" y="%d" fill="%s" font-size="12" text-anchor="end">%s</text>', x + card_w - 16, y + 30, p.comment, s[2])
+    add('<text x="%d" y="%d" fill="%s" font-size="12">%s</text>', x + 70, y + 52, p.fg_dim, s[3])
+    add('<text x="%d" y="%d" fill="%s" font-size="12" text-anchor="end">%.2f:1</text>', x + card_w - 16, y + 52, p.comment, contrast(s[2], p.bg))
+  end
+
+  label(pad, y_base + 22, "BACKGROUND")
+  local bw = (W - 2 * pad - (#base - 1) * gap) / #base
+  for i, b in ipairs(base) do
+    local x = pad + (i - 1) * (bw + gap)
+    add('<rect x="%.1f" y="%d" width="%.1f" height="64" rx="10" fill="%s" stroke="%s"/>', x, y_base + 34, bw, b[2], p.nontext)
+    add('<text x="%.1f" y="%d" fill="%s" font-size="13">%s</text>', x + 14, y_base + 62, p.fg, b[1])
+    add('<text x="%.1f" y="%d" fill="%s" font-size="12">%s</text>', x + 14, y_base + 84, p.fg_dim, b[2])
+  end
+
+  label(pad, y_term + 22, "TERMINAL")
+  local tw = (W - 2 * pad - 7 * 8) / 8
+  for i, c in ipairs(p.terminal) do
+    local col, row = (i - 1) % 8, math.floor((i - 1) / 8)
+    local x, y = pad + col * (tw + 8), y_term + 34 + row * 44
+    add('<rect x="%.1f" y="%d" width="%.1f" height="36" rx="8" fill="%s"/>', x, y, tw, c)
+    local text = luminance(c) > 0.18 and p.bg or p.fg
+    add('<text x="%.1f" y="%d" fill="%s" font-size="12">%d</text>', x + 10, y + 23, text, i - 1)
+    add('<text x="%.1f" y="%d" fill="%s" font-size="11" text-anchor="end">%s</text>', x + tw - 10, y + 23, text, c)
+  end
+
+  add("</svg>")
+  return out
+end
+
 local names = vim.tbl_keys(targets)
 table.sort(names)
 for _, path in ipairs(names) do
