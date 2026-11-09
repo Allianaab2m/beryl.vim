@@ -75,6 +75,12 @@ Themes for other apps live in [`extras/`](extras):
   `~/.config/ghostty/themes/beryl`, then set `theme = beryl` in your config
 - [Claude Code](https://claude.com/claude-code): copy `extras/claude-code/beryl.json`
   to `~/.claude/themes/beryl.json`, then pick Beryl in `/theme`
+- [bat](https://github.com/sharkdp/bat): copy `extras/bat/beryl.tmTheme` to
+  `$(bat --config-dir)/themes/`, run `bat cache --build`, then set
+  `--theme=beryl`
+- [delta](https://github.com/dandavison/delta): install the bat theme above, add
+  `extras/delta/beryl.gitconfig` to your git config with `[include] path = ...`,
+  then set `features = beryl` under `[delta]`
 
 ## Palette
 

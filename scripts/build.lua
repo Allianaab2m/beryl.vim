@@ -110,6 +110,140 @@ targets["extras/claude-code/beryl.json"] = function()
   return lines
 end
 
+-- bat（delta もこのテーマを使う）．TextMate のスコープを Neovim と同じ役割の色に割り当てる
+targets["extras/bat/beryl.tmTheme"] = function()
+  -- { スコープ, 前景, 字形 }．後の行ほど優先されるのではなく、より詳しいスコープが勝つ
+  local rules = {
+    { "Comment", "comment, punctuation.definition.comment", p.comment, "italic" },
+    { "Doc comment", "comment.block.documentation, comment.line.documentation", p.comment_doc },
+    { "String", "string, punctuation.definition.string", p.string },
+    { "Escape", "constant.character.escape, constant.other.placeholder", p.keyword },
+    { "Interpolation", "punctuation.section.embedded, punctuation.definition.template-expression", p.keyword },
+    { "Number, constant", "constant.numeric, constant.language, constant.other, support.constant", p.number },
+    { "Keyword", "keyword, storage, storage.type, storage.modifier, keyword.operator.word, keyword.operator.new", p.keyword },
+    { "Operator", "keyword.operator", p.fg },
+    { "Effect entry", "keyword.control.flow.await, storage.modifier.async, keyword.control.async", p.emerald_light },
+    { "Failure path", "keyword.control.exception, keyword.control.trycatch, keyword.control.flow.throw", p.red_beryl },
+    { "Function", "entity.name.function, support.function, meta.function-call.generic, variable.function", p.aquamarine },
+    { "Macro", "entity.name.function.macro, support.macro, support.function.macro", p.emerald_light },
+    {
+      "Type",
+      "entity.name.type, entity.name.class, entity.name.struct, entity.name.enum, entity.name.interface, entity.name.trait, entity.other.inherited-class, support.type, support.class, storage.type.primitive, storage.type.numeric",
+      p.type,
+    },
+    { "Parameter", "variable.parameter", p.red_beryl, "italic" },
+    { "self, this", "variable.language", p.red_beryl, "italic" },
+    { "Field", "variable.other.member, variable.other.property, variable.other.object.property, support.variable.property, meta.object-literal.key, entity.name.tag.yaml, support.type.property-name", p.mint },
+    { "Module", "entity.name.namespace, entity.name.module, support.module", p.fg, "italic" },
+    { "Attribute", "meta.annotation, meta.attribute, entity.name.function.decorator, punctuation.definition.annotation", p.keyword },
+    { "Punctuation", "punctuation, meta.brace", p.fg_dim },
+    { "Tag", "entity.name.tag", p.keyword },
+    { "Tag attribute", "entity.other.attribute-name", p.type, "italic" },
+    { "Invalid", "invalid", p.error_bright },
+    { "Heading", "markup.heading, entity.name.section", p.keyword, "bold" },
+    { "Bold", "markup.bold", nil, "bold" },
+    { "Italic", "markup.italic", nil, "italic" },
+    { "Raw", "markup.raw, markup.inline.raw", p.string },
+    { "Link", "markup.underline.link, string.other.link", p.blue, "underline" },
+    { "Quote", "markup.quote", p.comment, "italic" },
+    { "List marker", "punctuation.definition.list, markup.list.numbered.bullet", p.keyword },
+    { "Inserted", "markup.inserted", p.emerald_light },
+    { "Deleted", "markup.deleted", p.error_bright },
+    { "Changed", "markup.changed", p.type },
+  }
+
+  local function dict(pairs_, indent)
+    local lines = { indent .. "<dict>" }
+    for _, kv in ipairs(pairs_) do
+      lines[#lines + 1] = ("%s  <key>%s</key>"):format(indent, kv[1])
+      if type(kv[2]) == "table" then
+        vim.list_extend(lines, dict(kv[2], indent .. "  "))
+      else
+        lines[#lines + 1] = ("%s  <string>%s</string>"):format(indent, kv[2])
+      end
+    end
+    lines[#lines + 1] = indent .. "</dict>"
+    return lines
+  end
+
+  local lines = {
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">',
+    "<!-- " .. header .. " -->",
+    '<plist version="1.0">',
+    "<dict>",
+    "  <key>name</key>",
+    "  <string>beryl</string>",
+    "  <key>settings</key>",
+    "  <array>",
+  }
+  vim.list_extend(
+    lines,
+    dict({
+      {
+        "settings",
+        {
+          { "background", p.bg },
+          { "foreground", p.fg },
+          { "caret", p.fg },
+          { "lineHighlight", p.bg_hl },
+          { "selection", p.bg_visual },
+          { "findHighlight", p.bg_search },
+          { "invisibles", p.nontext },
+          { "gutter", p.bg },
+          { "gutterForeground", p.comment },
+        },
+      },
+    }, "    ")
+  )
+  for _, r in ipairs(rules) do
+    local settings = {}
+    if r[3] then
+      settings[#settings + 1] = { "foreground", r[3] }
+    end
+    if r[4] then
+      settings[#settings + 1] = { "fontStyle", r[4] }
+    end
+    vim.list_extend(lines, dict({ { "name", r[1] }, { "scope", r[2] }, { "settings", settings } }, "    "))
+  end
+  vim.list_extend(lines, { "  </array>", "</dict>", "</plist>" })
+  return lines
+end
+
+-- delta（git config に include する）．features = beryl で有効になる
+targets["extras/delta/beryl.gitconfig"] = function()
+  local opts = {
+    { "dark", "true" },
+    { "syntax-theme", "beryl" },
+    { "minus-style", ('syntax "%s"'):format(p.diff_delete) },
+    { "minus-non-emph-style", ('syntax "%s"'):format(p.diff_delete) },
+    { "minus-emph-style", ('syntax "%s"'):format(p.diff_delete_word) },
+    { "minus-empty-line-marker-style", ('syntax "%s"'):format(p.diff_delete) },
+    { "plus-style", ('syntax "%s"'):format(p.diff_add) },
+    { "plus-non-emph-style", ('syntax "%s"'):format(p.diff_add) },
+    { "plus-emph-style", ('syntax "%s"'):format(p.diff_add_word) },
+    { "plus-empty-line-marker-style", ('syntax "%s"'):format(p.diff_add) },
+    { "line-numbers-minus-style", ('"%s"'):format(p.error_bright) },
+    { "line-numbers-plus-style", ('"%s"'):format(p.emerald_light) },
+    { "line-numbers-zero-style", ('"%s"'):format(p.comment) },
+    { "line-numbers-left-style", ('"%s"'):format(p.nontext) },
+    { "line-numbers-right-style", ('"%s"'):format(p.nontext) },
+    { "file-style", ('"%s"'):format(p.fg) },
+    { "file-decoration-style", ('"%s" ul'):format(p.comment) },
+    { "hunk-header-style", "file line-number syntax" },
+    { "hunk-header-file-style", ('"%s"'):format(p.keyword) },
+    { "hunk-header-line-number-style", ('"%s"'):format(p.comment) },
+    { "hunk-header-decoration-style", ('"%s" box ul'):format(p.nontext) },
+    { "commit-decoration-style", ('"%s" bold box ul'):format(p.comment) },
+    { "blame-palette", ('"%s"'):format(table.concat({ p.bg, p.bg_hl, p.bg_dark, p.nontext }, " ")) },
+  }
+  local lines = { "# " .. header, '[delta "beryl"]' }
+  for _, kv in ipairs(opts) do
+    lines[#lines + 1] = ("\t%s = %s"):format(kv[1], kv[2])
+  end
+  return lines
+end
+
 -- README に載せるパレットの見本（assets/palette.svg）
 -- 背景とのコントラスト比はここで計算する（WCAG 2.x の相対輝度）
 local function luminance(hex)
