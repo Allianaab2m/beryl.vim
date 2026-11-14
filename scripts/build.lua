@@ -762,6 +762,73 @@ targets["extras/zed/themes/beryl.json"] = function()
   }))
 end
 
+-- OpenCode（~/.config/opencode/themes/beryl.json）
+-- 組み込みテーマと同じ V1 形式．OpenCode が読み込むときに V2 へ変換する．
+-- 値を dark/light に分けず 1 色で書くと、ダークのみのテーマとして扱われる
+targets["extras/opencode/beryl.json"] = function()
+  local b = p.bright
+  local theme = {
+    { "primary", p.keyword },
+    { "secondary", p.blue },
+    { "accent", p.emerald_light },
+    { "error", p.error_bright },
+    { "warning", p.string },
+    { "success", b.green },
+    { "info", p.blue },
+    { "text", p.fg },
+    { "textMuted", p.comment },
+    -- primary を背景にした選択中の項目の文字
+    { "selectedListItemText", p.bg },
+    { "background", p.bg },
+    { "backgroundPanel", p.bg_dark },
+    { "backgroundElement", p.bg_hl },
+    { "backgroundMenu", p.bg_hl },
+    { "border", p.emerald_dark },
+    { "borderActive", p.emerald_light },
+    { "borderSubtle", p.nontext },
+    { "diffAdded", p.emerald_light },
+    { "diffRemoved", p.error_bright },
+    { "diffContext", p.comment },
+    { "diffHunkHeader", p.blue },
+    { "diffHighlightAdded", b.green },
+    { "diffHighlightRemoved", b.red },
+    { "diffAddedBg", p.diff_add },
+    { "diffRemovedBg", p.diff_delete },
+    { "diffContextBg", p.bg },
+    { "diffLineNumber", p.gray },
+    { "diffAddedLineNumberBg", p.diff_add_dim },
+    { "diffRemovedLineNumberBg", p.diff_delete_dim },
+    -- markdown は Neovim の @markup.* に合わせる．強調は字形だけで色を変えない
+    { "markdownText", p.fg },
+    { "markdownHeading", p.keyword },
+    { "markdownLink", p.blue },
+    { "markdownLinkText", p.keyword },
+    { "markdownCode", p.string },
+    { "markdownBlockQuote", p.comment },
+    { "markdownEmph", p.fg },
+    { "markdownStrong", p.fg },
+    { "markdownHorizontalRule", p.comment },
+    { "markdownListItem", p.keyword },
+    { "markdownListEnumeration", p.keyword },
+    { "markdownImage", p.blue },
+    { "markdownImageText", p.keyword },
+    { "markdownCodeBlock", p.fg },
+    { "syntaxComment", p.comment },
+    { "syntaxKeyword", p.keyword },
+    { "syntaxFunction", p.aquamarine },
+    { "syntaxVariable", p.fg },
+    { "syntaxString", p.string },
+    { "syntaxNumber", p.number },
+    { "syntaxType", p.type },
+    { "syntaxOperator", p.fg },
+    { "syntaxPunctuation", p.fg_dim },
+  }
+  return json_lines(obj({
+    { "$schema", "https://opencode.ai/theme.json" },
+    { "theme", obj(theme) },
+  }))
+end
+
 -- README に載せるパレットの見本（assets/palette.svg）
 -- 背景とのコントラスト比はここで計算する（WCAG 2.x の相対輝度）
 local function luminance(hex)
