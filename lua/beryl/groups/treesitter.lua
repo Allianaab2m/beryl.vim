@@ -62,18 +62,18 @@ return function(p, c)
     ["@operator"] = { link = "Operator" },
 
     ["@keyword"] = { link = "Keyword" },
-    ["@keyword.coroutine"] = { fg = p.emerald_light }, -- async, await
-    ["@keyword.function"] = { fg = p.keyword },
-    ["@keyword.operator"] = { fg = p.keyword },
-    ["@keyword.import"] = { fg = p.keyword },
-    ["@keyword.type"] = { fg = p.keyword },
-    ["@keyword.modifier"] = { fg = p.keyword },
-    ["@keyword.repeat"] = { fg = p.keyword },
-    ["@keyword.return"] = { fg = p.keyword },
-    ["@keyword.debug"] = { fg = p.error_bright },
-    ["@keyword.exception"] = { fg = p.red_beryl }, -- throw, try, catch, fail
-    ["@keyword.conditional"] = { fg = p.keyword },
-    ["@keyword.directive"] = { fg = p.keyword },
+    ["@keyword.coroutine"] = { fg = p.emerald_light, italic = c.italic_keywords }, -- async, await
+    ["@keyword.function"] = { fg = p.keyword, italic = c.italic_keywords },
+    ["@keyword.operator"] = { fg = p.keyword, italic = c.italic_keywords },
+    ["@keyword.import"] = { fg = p.keyword, italic = c.italic_keywords },
+    ["@keyword.type"] = { fg = p.keyword, italic = c.italic_keywords },
+    ["@keyword.modifier"] = { fg = p.keyword, italic = c.italic_keywords },
+    ["@keyword.repeat"] = { fg = p.keyword, italic = c.italic_keywords },
+    ["@keyword.return"] = { fg = p.keyword, italic = c.italic_keywords },
+    ["@keyword.debug"] = { fg = p.error_bright, italic = c.italic_keywords },
+    ["@keyword.exception"] = { fg = p.red_beryl, italic = c.italic_keywords }, -- throw, try, catch, fail
+    ["@keyword.conditional"] = { fg = p.keyword, italic = c.italic_keywords },
+    ["@keyword.directive"] = { fg = p.keyword, italic = c.italic_keywords },
 
     ["@punctuation.delimiter"] = { fg = p.fg_dim },
     ["@punctuation.bracket"] = { fg = p.fg_dim },

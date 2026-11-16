@@ -52,6 +52,8 @@ require("beryl").setup({
   -- Leave the background unset so the terminal background shows through
   transparent = false,
   italic_comments = true,
+  -- Italicize keywords such as fn, if and return
+  italic_keywords = true,
   -- Set terminal_color_0 to terminal_color_15
   terminal_colors = true,
   -- Override or add highlight groups

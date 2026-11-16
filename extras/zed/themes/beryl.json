@@ -186,13 +186,16 @@
             "color": "#7F9A93"
           },
           "keyword": {
-            "color": "#5FD9BC"
+            "color": "#5FD9BC",
+            "font_style": "italic"
           },
           "keyword.coroutine": {
-            "color": "#24C0A1"
+            "color": "#24C0A1",
+            "font_style": "italic"
           },
           "keyword.exception": {
-            "color": "#F28B9B"
+            "color": "#F28B9B",
+            "font_style": "italic"
           },
           "label": {
             "color": "#24C0A1",
@@ -223,7 +226,8 @@
             "font_style": "italic"
           },
           "preproc": {
-            "color": "#5FD9BC"
+            "color": "#5FD9BC",
+            "font_style": "italic"
           },
           "primary": {
             "color": "#E4F4EF"

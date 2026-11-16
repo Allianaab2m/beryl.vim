@@ -107,6 +107,8 @@
       <dict>
         <key>foreground</key>
         <string>#5FD9BC</string>
+        <key>fontStyle</key>
+        <string>italic</string>
       </dict>
     </dict>
     <dict>
@@ -118,6 +120,8 @@
       <dict>
         <key>foreground</key>
         <string>#E4F4EF</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>
@@ -129,6 +133,8 @@
       <dict>
         <key>foreground</key>
         <string>#24C0A1</string>
+        <key>fontStyle</key>
+        <string>italic</string>
       </dict>
     </dict>
     <dict>
@@ -140,6 +146,8 @@
       <dict>
         <key>foreground</key>
         <string>#F28B9B</string>
+        <key>fontStyle</key>
+        <string>italic</string>
       </dict>
     </dict>
     <dict>
@@ -173,6 +181,8 @@
       <dict>
         <key>foreground</key>
         <string>#F2C46D</string>
+        <key>fontStyle</key>
+        <string></string>
       </dict>
     </dict>
     <dict>

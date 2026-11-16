@@ -276,7 +276,8 @@
         "keyword.operator.new"
       ],
       "settings": {
-        "foreground": "#5FD9BC"
+        "foreground": "#5FD9BC",
+        "fontStyle": "italic"
       }
     },
     {
@@ -285,7 +286,8 @@
         "keyword.operator"
       ],
       "settings": {
-        "foreground": "#E4F4EF"
+        "foreground": "#E4F4EF",
+        "fontStyle": ""
       }
     },
     {
@@ -296,7 +298,8 @@
         "keyword.control.async"
       ],
       "settings": {
-        "foreground": "#24C0A1"
+        "foreground": "#24C0A1",
+        "fontStyle": "italic"
       }
     },
     {
@@ -307,7 +310,8 @@
         "keyword.control.flow.throw"
       ],
       "settings": {
-        "foreground": "#F28B9B"
+        "foreground": "#F28B9B",
+        "fontStyle": "italic"
       }
     },
     {
@@ -349,7 +353,8 @@
         "storage.type.numeric"
       ],
       "settings": {
-        "foreground": "#F2C46D"
+        "foreground": "#F2C46D",
+        "fontStyle": ""
       }
     },
     {
@@ -606,7 +611,8 @@
       "foreground": "#5FD9BC"
     },
     "keyword": {
-      "foreground": "#5FD9BC"
+      "foreground": "#5FD9BC",
+      "italic": true
     },
     "number": {
       "foreground": "#C9A6F5"
@@ -625,7 +631,8 @@
       "italic": true
     },
     "lifetime": {
-      "foreground": "#5FD9BC"
+      "foreground": "#5FD9BC",
+      "italic": true
     },
     "builtinType": {
       "foreground": "#F2C46D"

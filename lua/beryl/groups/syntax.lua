@@ -13,22 +13,22 @@ return function(p, c)
     Identifier = { fg = p.fg },
     Function = { fg = p.aquamarine },
 
-    Statement = { fg = p.keyword },
-    Conditional = { fg = p.keyword },
-    Repeat = { fg = p.keyword },
+    Statement = { fg = p.keyword, italic = c.italic_keywords },
+    Conditional = { fg = p.keyword, italic = c.italic_keywords },
+    Repeat = { fg = p.keyword, italic = c.italic_keywords },
     Label = { fg = p.keyword },
     Operator = { fg = p.fg },
-    Keyword = { fg = p.keyword },
-    Exception = { fg = p.red_beryl }, -- 失敗の経路は赤系
+    Keyword = { fg = p.keyword, italic = c.italic_keywords },
+    Exception = { fg = p.red_beryl, italic = c.italic_keywords }, -- 失敗の経路は赤系
 
-    PreProc = { fg = p.keyword },
-    Include = { fg = p.keyword },
-    Define = { fg = p.keyword },
+    PreProc = { fg = p.keyword, italic = c.italic_keywords },
+    Include = { fg = p.keyword, italic = c.italic_keywords },
+    Define = { fg = p.keyword, italic = c.italic_keywords },
     Macro = { fg = p.emerald_light },
-    PreCondit = { fg = p.keyword },
+    PreCondit = { fg = p.keyword, italic = c.italic_keywords },
 
     Type = { fg = p.type },
-    StorageClass = { fg = p.keyword },
+    StorageClass = { fg = p.keyword, italic = c.italic_keywords },
     Structure = { fg = p.type },
     Typedef = { fg = p.type },
 

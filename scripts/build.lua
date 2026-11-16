@@ -111,7 +111,8 @@ targets["extras/claude-code/beryl.json"] = function()
 end
 
 -- TextMate のスコープを Neovim と同じ役割の色に割り当てる．bat と VS Code が共有する
--- { 名前, スコープ, 前景, 字形 }．後の行が勝つのではなく、より詳しいスコープが勝つ
+-- { 名前, スコープ, 前景, 字形 }．後の行が勝つのではなく、より詳しいスコープが勝つ．
+-- 字形も同じ規則で継ぐので、keyword や storage の下で斜体にしないスコープには "" を明示する
 local textmate_rules = {
   { "Comment", "comment, punctuation.definition.comment", p.comment, "italic" },
   { "Doc comment", "comment.block.documentation, comment.line.documentation", p.comment_doc },
@@ -119,16 +120,17 @@ local textmate_rules = {
   { "Escape", "constant.character.escape, constant.other.placeholder", p.keyword },
   { "Interpolation", "punctuation.section.embedded, punctuation.definition.template-expression, punctuation.section.interpolation", p.keyword },
   { "Number, constant", "constant.numeric, constant.language, constant.other, support.constant", p.number },
-  { "Keyword", "keyword, storage, storage.type, storage.modifier, keyword.operator.word, keyword.operator.new", p.keyword },
-  { "Operator", "keyword.operator", p.fg },
-  { "Effect entry", "keyword.control.flow.await, storage.modifier.async, keyword.control.async", p.emerald_light },
-  { "Failure path", "keyword.control.exception, keyword.control.trycatch, keyword.control.flow.throw", p.red_beryl },
+  { "Keyword", "keyword, storage, storage.type, storage.modifier, keyword.operator.word, keyword.operator.new", p.keyword, "italic" },
+  { "Operator", "keyword.operator", p.fg, "" },
+  { "Effect entry", "keyword.control.flow.await, storage.modifier.async, keyword.control.async", p.emerald_light, "italic" },
+  { "Failure path", "keyword.control.exception, keyword.control.trycatch, keyword.control.flow.throw", p.red_beryl, "italic" },
   { "Function", "entity.name.function, support.function, meta.function-call.generic, variable.function", p.aquamarine },
   { "Macro", "entity.name.function.macro, support.macro, support.function.macro", p.emerald_light },
   {
     "Type",
     "entity.name.type, entity.name.class, entity.name.struct, entity.name.enum, entity.name.interface, entity.name.trait, entity.other.inherited-class, support.type, support.class, storage.type.primitive, storage.type.numeric",
     p.type,
+    "",
   },
   { "Parameter", "variable.parameter", p.red_beryl, "italic" },
   { "self, this", "variable.language", p.red_beryl, "italic" },
@@ -548,13 +550,13 @@ targets["extras/vscode/themes/beryl-color-theme.json"] = function()
     { "property", style(p.mint) },
     { "variable", style(p.fg) },
     { "decorator", style(p.keyword) },
-    { "keyword", style(p.keyword) },
+    { "keyword", style(p.keyword, { { "italic", true } }) },
     { "number", style(p.number) },
     { "string", style(p.string) },
     { "regexp", style(p.mint) },
     { "operator", style(p.fg) },
     { "selfKeyword", style(p.red_beryl, { { "italic", true } }) },
-    { "lifetime", style(p.keyword) },
+    { "lifetime", style(p.keyword, { { "italic", true } }) },
     { "builtinType", style(p.type) },
     { "*.deprecated", obj({ { "strikethrough", true } }) },
     -- Emela：引数を本文色に戻す
@@ -714,9 +716,9 @@ targets["extras/zed/themes/beryl.json"] = function()
     { "function", s(p.aquamarine) },
     { "function.macro", s(p.emerald_light) },
     { "hint", s(p.comment) },
-    { "keyword", s(p.keyword) },
-    { "keyword.coroutine", s(p.emerald_light) },
-    { "keyword.exception", s(p.red_beryl) },
+    { "keyword", s(p.keyword, "italic") },
+    { "keyword.coroutine", s(p.emerald_light, "italic") },
+    { "keyword.exception", s(p.red_beryl, "italic") },
     { "label", s(p.emerald_light, "italic") },
     { "link_text", s(p.keyword) },
     { "link_uri", s(p.blue) },
@@ -725,7 +727,7 @@ targets["extras/zed/themes/beryl.json"] = function()
     { "number", s(p.number) },
     { "operator", s(p.fg) },
     { "predictive", s(p.comment, "italic") },
-    { "preproc", s(p.keyword) },
+    { "preproc", s(p.keyword, "italic") },
     { "primary", s(p.fg) },
     { "property", s(p.mint) },
     { "punctuation", s(p.fg_dim) },
